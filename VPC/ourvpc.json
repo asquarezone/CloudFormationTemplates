@@ -1,0 +1,111 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Learning Cloudformation and creating  vpc",
+    "Parameters":{
+        
+        "cidrrange": {
+            "Description": "This is CIDR for VPC",
+            "Type": "String",
+            "Default": "10.10.0.0/16"
+        },
+        
+        "cidrrangeforsubnet": {
+            "Description": "-",
+            "Type": "String",
+            "Default": "10.10.1.0/24"
+        },
+
+        
+        "az": {
+            "Description": "az",
+            "Type": "AWS::EC2::AvailabilityZone::Name"
+            
+        }
+        
+        
+
+        
+    },
+    "Resources": {
+
+        
+        "oursubnet": {
+          "Type": "AWS::EC2::Subnet",
+          "Properties": {
+            "AvailabilityZone": 
+            { "Ref": "az" }
+            ,
+            "VpcId": 
+            { "Ref": "vpcresource" }
+            ,
+            "CidrBlock": 
+            { "Ref": "cidrrangeforsubnet" }
+          
+          }
+        },
+        
+        
+        "vpcresource": {
+          "Type": "AWS::EC2::VPC",
+          "Properties": {
+            "CidrBlock": 
+            { "Ref": "cidrrange" }
+            
+          }
+        },
+        
+        "ourigw": {
+          "Type": "AWS::EC2::InternetGateway"
+        },
+        "AttachGateway": {
+          "Type": "AWS::EC2::VPCGatewayAttachment",
+          "Properties": {
+            "VpcId": 
+            { "Ref": "vpcresource" }
+            ,
+            "InternetGatewayId": 
+            { "Ref": "ourigw" }
+            
+          }
+        },
+        
+        "ourroutetable": {
+          "Type": "AWS::EC2::RouteTable",
+          "Properties": {
+            "VpcId": 
+            { "Ref": "vpcresource" }
+          }
+        },
+        
+        "ourroute": {
+          "Type": "AWS::EC2::Route",
+          "Properties": {
+            "RouteTableId": 
+            { "Ref": "ourroutetable" }
+            ,
+            "DestinationCidrBlock": "0.0.0.0/0",
+            "GatewayId": 
+            { "Ref": "ourigw" }
+            
+          }
+        },
+        "ourSubnetRouteTableAssociation" : {
+            "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties" : {
+               "SubnetId" : { "Ref" : "oursubnet" },
+               "RouteTableId" : { "Ref" : "ourroutetable" }
+            }
+         }
+        
+        
+    },
+    "Outputs": {
+        
+        "vpc" : {
+          "Value" : 
+          { "Ref": "vpcresource" }
+          
+        }
+        
+    }
+}

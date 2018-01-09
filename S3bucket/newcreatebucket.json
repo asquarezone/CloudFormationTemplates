@@ -1,0 +1,35 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Learning Cloudformation for creating s3 bucket",
+    "Parameters":{
+       
+       "bucketname": {
+           "Description": "Enter your bucket name",
+           "Type": "String"
+       }
+       
+    },
+    "Resources" : {
+        
+        
+        "s3Bucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "AccessControl": "PublicRead",
+                "BucketName": 
+                { "Ref": "bucketname" }
+                
+            }
+        }
+    },
+    
+    "Outputs":{
+        
+        "myout" : {
+          "Value" : 
+          { "Ref": "s3Bucket" }
+          
+        }
+        
+    }
+}

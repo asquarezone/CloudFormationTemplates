@@ -1,0 +1,52 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "testing ec2 with cf",
+    "Parameters": {
+        
+        "imageidformachine": {
+            "Description": "imageidformachine",
+            "Type": "String",
+            "Default": "ami-077bad7f"
+        },
+        
+        "machinetype": {
+            "Type": "String",
+            "Default": "t2.micro"
+        }
+        
+        
+    },
+    "Resources": {
+        
+        
+        "myec2": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "KeyName": "myec2",
+                "ImageId":  
+                { "Ref": "imageidformachine" }
+                 ,
+                "InstanceType": 
+                { "Ref": "machinetype" }
+                ,
+                "SecurityGroupIds" : [
+                { "Ref": "jenkinssg" }
+                ]
+                }
+        },
+        
+        "jenkinssg" : {
+          "Type" : "AWS::EC2::SecurityGroup",
+          "Properties" : {
+            "GroupDescription" : "-",
+            "SecurityGroupIngress" : [ {
+              "IpProtocol" : "tcp",
+            "FromPort" : "8080",
+            "ToPort" : "8080",
+            "CidrIp" : "0.0.0.0/0"
+            }],
+            "VpcId" : "vpc-ac9506cb"
+          }
+        }
+    }
+}

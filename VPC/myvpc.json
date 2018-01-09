@@ -1,0 +1,90 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Learning Cloudformation and creating  vpc",
+    "Parameters":{
+       
+       "vpccidr": {
+           "Description": "Please enter vpc cidr",
+           "Type": "String",
+           "Default": "192.168.0.0/16"
+       },
+       
+       "subnet1cidr": {
+           "Description": "Please enter subnet1 cidr",
+           "Type": "String",
+           "Default": "192.168.1.0/24"
+       },
+       "subnet2cidr": {
+           "Description": "Please enter subnet2 cidr",
+           "Type": "String",
+           "Default": "192.168.2.0/24"
+       },
+       
+       "azsubnet1": {
+           "Description": "select az for subnet1",
+           "Type": "AWS::EC2::AvailabilityZone::Name",
+           "Default": "-"
+       }
+       
+       
+       
+    },
+    "Resources": {
+        
+        "myvpc": {
+          "Type": "AWS::EC2::VPC",
+          "Properties": {
+            "CidrBlock": 
+            { "Ref": "vpccidr" }
+            
+          }
+        },
+        
+        "igwName": {
+          "Type": "AWS::EC2::InternetGateway"
+        },
+        "AttachGateway": {
+          "Type": "AWS::EC2::VPCGatewayAttachment",
+          "Properties": {
+            "VpcId": { "Ref": "myvpc" } ,
+            "InternetGatewayId": { "Ref": "igwName" }
+          }
+        },
+        
+        "subnetOne": {
+          "Type": "AWS::EC2::Subnet",
+          "Properties": {
+            "AvailabilityZone": "us-west-2a",
+            "VpcId": 
+            { "Ref": "myvpc" }
+            ,
+            "CidrBlock": 
+            { "Ref": "subnet1cidr" }
+            
+          }
+
+        },
+        
+        "subnetTwo": {
+          "Type": "AWS::EC2::Subnet",
+          "Properties": {
+            "AvailabilityZone": "us-west-2b",
+            "VpcId": 
+            { "Ref": "myvpc" }
+            ,
+            "CidrBlock": 
+            { "Ref": "subnet2cidr" }
+            
+          }
+        }
+        
+        
+
+        
+        
+    },
+    "Outputs": {
+
+    }
+    
+}

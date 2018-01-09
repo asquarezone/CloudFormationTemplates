@@ -1,0 +1,86 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Applying RDS with CF",
+    "Parameters":{
+        
+        "InstanceType": {
+            "Description": "Instance Type of RDS",
+            "Type": "String",
+            "Default": "db.t2.micro"
+        },
+        
+        "StorageSize": {
+            "Description": "Storage Size in GB",
+            "Type": "String"
+        },
+        
+        "vpcid": {
+            "Description": "-",
+            "Type": "String"
+        }
+        
+        
+        
+    },
+    "Resources": {
+        
+        "myfirstfromcf": {
+          "Type": "AWS::RDS::DBInstance",
+          "Properties": {
+            "AllocatedStorage": 
+            { "Ref": "StorageSize" }
+            ,
+            "DBInstanceClass": 
+            { "Ref": "InstanceType" }
+            ,
+            "AllowMajorVersionUpgrade": "false",
+            "AutoMinorVersionUpgrade": "false",
+            "BackupRetentionPeriod": "0",
+            "DBInstanceIdentifier": "qt-rds-from-cf",
+            "DBName": "cfdb",
+            "Engine": "mysql",
+            "MasterUsername": "root",
+            "MasterUserPassword": "rootroot",
+            "MultiAZ": "false",
+            "PubliclyAccessible": "true",
+            "StorageEncrypted": "false"
+          }
+        },
+        
+        "mysecgroup" : {
+          "Type" : "AWS::EC2::SecurityGroup",
+          "Properties" : {
+            "GroupDescription" : "Allow SSH",
+            "SecurityGroupIngress" : [{
+					"CidrIp": "0.0.0.0/0",
+					"FromPort": 22,
+					"IpProtocol": "tcp",
+					"ToPort": 22
+			}],
+            "VpcId" : 
+            { "Ref": "vpcid" }
+            
+          }
+        },
+
+        
+        "myec2": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "KeyName": "blockchain",
+                "ImageId":  "ami-bsdjkf" ,
+                "InstanceType": "t2.micro",
+                "SecurityGroupIds" : [
+                { "Ref": "mysecgroup" }
+                ]
+            }   
+            
+        }
+        
+        
+        
+    },
+    "Outputs":{
+
+    }
+}

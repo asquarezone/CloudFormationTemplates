@@ -1,0 +1,48 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "This is cloud formation template for creating S3 Bucket",
+    "Parameters":{
+        
+        "bucketname": {
+            "Description": "Enter bucket name",
+            "Type": "String",
+            "Default": "-"
+        }
+        
+
+    },
+    "Resources": {
+        
+        "mybucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "AccessControl": "PublicRead",
+                "BucketName": 
+                { "Ref": "bucketname" }
+                
+            }
+        }
+        
+
+    },
+    "Outputs":{
+        "S3BucketSecureURL": {
+            "Value": {
+                "Fn::Join": [
+                    "",
+                    [
+                        "https://",
+                        {
+                            "Fn::GetAtt": [
+                                "mybucket",
+                                "DomainName"
+                            ]
+                        }
+                    ]
+                ]
+            },
+            "Description": "Name of S3 bucket to hold website content"
+        }
+
+    }
+}

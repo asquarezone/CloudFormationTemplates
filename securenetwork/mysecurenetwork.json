@@ -1,0 +1,108 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "This is cloud formation template for creating secure network",
+    "Parameters":{
+       
+       "AvailabilityZoneForPublicSubnet": {
+           "Description": "Select AZ",
+           "Type": "AWS::EC2::AvailabilityZone::Name"
+       },
+       "AvailabilityZoneForPrivateSubnet":{
+           "Description": "Select AZ",
+           "Type": "AWS::EC2::AvailabilityZone::Name"
+       }
+
+               
+        
+    },
+    "Resources":{
+
+               
+        "securevpc": {
+          "Type": "AWS::EC2::VPC",
+          "Properties": {
+            "CidrBlock": "10.50.0.0/16",
+            "EnableDnsHostnames": true
+          }
+        },
+        
+        "secureigw": {
+          "Type": "AWS::EC2::InternetGateway"
+        },
+        "AttachGateway": {
+          "Type": "AWS::EC2::VPCGatewayAttachment",
+          "Properties": {
+            "VpcId": 
+            { "Ref": "securevpc" }
+            ,
+            "InternetGatewayId": { "Ref": "secureigw" }
+          }
+        },
+        
+        "securepublicsubnet": {
+          "Type": "AWS::EC2::Subnet",
+          "Properties": {
+            "VpcId": { "Ref": "securevpc" } ,
+            "CidrBlock": "10.50.1.0/24",
+            "AvailabilityZone" :
+            { "Ref": "AvailabilityZoneForPublicSubnet" }
+            
+          }
+        },
+        "secureprivatesubnet": {
+          "Type": "AWS::EC2::Subnet",
+          "Properties": {
+            "VpcId": 
+            { "Ref": "securevpc" }
+            ,
+            "CidrBlock": "10.50.2.0/24",
+            "AvailabilityZone" : 
+            { "Ref": "AvailabilityZoneForPrivateSubnet" }
+            
+          }
+        },
+        
+        "publicroutetable": {
+          "Type": "AWS::EC2::RouteTable",
+          "Properties": {
+            "VpcId": 
+            { "Ref": "securevpc" }
+            
+          }
+        },
+        
+        "routeName": {
+          "Type": "AWS::EC2::Route",
+          "Properties": {
+            "RouteTableId": 
+            { "Ref": "publicroutetable" }
+            ,
+            "DestinationCidrBlock": "0.0.0.0/0",
+            "GatewayId": 
+            { "Ref": "secureigw" }
+            
+          }
+        },
+        
+        "routeTableAssocName": {
+          "Type": "AWS::EC2::SubnetRouteTableAssociation",
+          "Properties": {
+            "SubnetId": 
+            { "Ref": "securepublicsubnet" }
+            ,
+            "RouteTableId": 
+            { "Ref": "publicroutetable" }
+            
+          }
+        }
+    },
+    "Outputs":{
+        
+        "vpc" : {
+          "Value" : 
+          { "Ref": "securevpc" }
+          
+        }
+        
+    }
+}

@@ -1,0 +1,56 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "description": "test",
+    "Resources":{
+        
+        "mytestVPC": {
+          "Type": "AWS::EC2::VPC",
+          "Properties": {
+            "CidrBlock": "10.50.0.0/16"
+          }
+        },
+        
+        "ssh" : {
+          "Type" : "AWS::EC2::SecurityGroup",
+          "Properties" : {
+            "GroupDescription" : "-",
+            "SecurityGroupIngress" : [ 
+              {
+                  "CidrIp": "0.0.0.0/0",
+					"FromPort": 22,
+					"IpProtocol": "tcp",
+					"ToPort": 22
+              }
+            ],
+            "VpcId" :  { "Ref": "mytestVPC" }
+          }
+        },
+
+        
+        "igwName": {
+          "Type": "AWS::EC2::InternetGateway"          
+        },
+        "AttachGateway": {
+          "Type": "AWS::EC2::VPCGatewayAttachment",
+          "Properties": {
+            "VpcId": 
+            { "Ref": "mytestVPC" }
+            ,
+            "InternetGatewayId": { "Ref": "igwName" }
+          }
+        },
+        
+        "routeTableName": {
+          "Type": "AWS::EC2::RouteTable",
+          "Properties": {
+            "VpcId": 
+            { "Ref": "mytestVPC" }
+            ,
+            "Tags": ["--"]
+          }
+        }
+        
+        
+        
+    }
+}
