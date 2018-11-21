@@ -1,0 +1,51 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Trying to create network",
+    "Parameters": {
+        
+        "vpccidr": {
+            "Description": "This is CIDR Block for VPC",
+            "Type": "String",
+            "Default": "10.10.0.0/16"
+        },
+        "subnet1cidr": {
+            "Description": "This is CIDR For subnet-1",
+            "Type": "String",
+            "Default": "10.10.0.0/24"
+        }
+    },
+    "Resources": {
+        
+        "vpcfromcf": {
+          "Type": "AWS::EC2::VPC",
+          "Properties": {
+            "CidrBlock": { "Ref": "vpccidr" },
+            "EnableDnsHostnames": true
+          }
+        },
+        
+        "subnet1": {
+          "Type": "AWS::EC2::Subnet",
+          "Properties": {
+            "AvailabilityZone": "ap-south-1a",
+            "VpcId": { "Ref": "vpcfromcf" } ,
+            "CidrBlock": 
+            { "Ref": "subnet1cidr" }
+          }
+        }
+        
+    },
+    "Outputs":{
+        "VPCID" : {
+            "Description": "The VPC ID",
+            "Value": { "Ref": "vpcfromcf" }
+            
+        },
+        "SUBNET1ID": {
+            "Description": "Subnet -1 ID",
+            "Value":  { "Ref": "subnet1" }
+            
+        }
+    }
+
+}

@@ -1,0 +1,241 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Second Network",
+    "Parameters":{
+        "keypair": {
+            "Description": "key pair",
+            "Type": "AWS::EC2::KeyPair::KeyName"
+            
+        },
+        
+        "vpccidrblock": {
+            "Description": "CIDR Block for VPC",
+            "Type": "String",
+            "Default": "10.0.0.0/16"
+        },
+        
+        "subnet1cidr": {
+            "Description": "Subnet 1 CIDR",
+            "Type": "String",
+            "Default": "10.0.0.0/24"
+        },
+        "subnet2cidr": {
+            "Description": "Subnet 1 CIDR",
+            "Type": "String",
+            "Default": "10.0.1.0/24"
+        },
+        "subnet3cidr": {
+            "Description": "Subnet 1 CIDR",
+            "Type": "String",
+            "Default": "10.0.2.0/24"
+        },
+        "subnet4cidr": {
+            "Description": "Subnet 1 CIDR",
+            "Type": "String",
+            "Default": "10.0.3.0/24"
+        },
+        
+        "subnet1az": {
+            "Description": "az of subnet1",
+            "Type":"AWS::EC2::AvailabilityZone::Name"
+        },
+        "subnet2az": {
+            "Description": "az of subnet2",
+            "Type":"AWS::EC2::AvailabilityZone::Name"
+        },
+        "subnet3az": {
+            "Description": "az of subnet3",
+            "Type":"AWS::EC2::AvailabilityZone::Name"
+        },
+        "subnet4az": {
+            "Description": "az of subnet4",
+            "Type":"AWS::EC2::AvailabilityZone::Name"
+        }
+    },
+    "Mappings":{
+      "ImageMap": {
+                "us-west-2": {
+                  "image": "ami-28e07e50"
+                },
+                "us-west-1": {
+                  "image": "ami-18726478"
+                },
+                "ap-south-1":{
+                  "image": "ami-5b673c34"
+                }
+      }
+      
+    },
+    "Resources":{
+        "myvpc": {
+          "Type": "AWS::EC2::VPC",
+          "Properties": {
+            "CidrBlock": {"Ref":"vpccidrblock"}
+          }
+        },
+        
+        "subnet1": {
+          "Type": "AWS::EC2::Subnet",
+          "Properties": {
+            "AvailabilityZone": {"Ref":"subnet1az"},
+            "VpcId": { "Ref": "myvpc" },
+            "CidrBlock": {"Ref":"subnet1cidr"}
+          }
+        },
+        "subnet2": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+              "AvailabilityZone": {"Ref":"subnet2az"},
+              "VpcId": { "Ref": "myvpc" },
+              "CidrBlock": {"Ref":"subnet2cidr"}
+            }
+          },
+          "subnet3": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+              "AvailabilityZone": {"Ref":"subnet3az"},
+              "VpcId": { "Ref": "myvpc" },
+              "CidrBlock": {"Ref":"subnet3cidr"}
+            }
+          },
+          "subnet4": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+              "AvailabilityZone": {"Ref":"subnet4az"},
+              "VpcId": { "Ref": "myvpc" },
+              "CidrBlock": {"Ref":"subnet4cidr"}
+            }
+          },
+          
+          "mysecuritygroup" : {
+            "Type" : "AWS::EC2::SecurityGroup",
+            "Properties" : {
+              "GroupName": "AllowSSH",
+              "GroupDescription" : "This Group is for allowing ssh",
+              "VpcId" : {"Ref":"myvpc"},
+              "SecurityGroupIngress" : [ {
+                "IpProtocol" : "tcp",
+                "FromPort" : 22,
+                "ToPort" : 22,
+                "CidrIp" : "0.0.0.0/0"
+             },
+             {
+                "IpProtocol" : "tcp",
+                "FromPort" : 80,
+                "ToPort" : 80,
+                "CidrIp" : "0.0.0.0/0"
+             }
+
+             ]
+            }
+          },
+          
+          "myigw": {
+            "Type": "AWS::EC2::InternetGateway"
+          },
+          "AttachGateway": {
+            "Type": "AWS::EC2::VPCGatewayAttachment",
+            "Properties": {
+              "VpcId": {"Ref":"myvpc"},
+              "InternetGatewayId": { "Ref": "myigw" }
+            }
+          },
+
+          
+          "myroutetable": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+              "VpcId": {"Ref":"myvpc"}
+            }
+          },
+          
+          "igw": {
+            "Type": "AWS::EC2::Route",
+            "Properties": {
+              "RouteTableId": {"Ref": "myroutetable"},
+              "DestinationCidrBlock": "0.0.0.0/0",
+              "GatewayId": {"Ref":"myigw"}
+            }
+          },
+          "myassociationforsubnet1":{
+            "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties" : {
+              "RouteTableId" : {"Ref": "myroutetable"},
+              "SubnetId" : {"Ref":"subnet1"}
+            }
+          },     
+          "myassociationforsubnet2":{
+            "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties" : {
+              "RouteTableId" : {"Ref": "myroutetable"},
+              "SubnetId" : {"Ref":"subnet1"}
+            }
+          },
+          "myassociationforsubnet3":{
+            "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties" : {
+              "RouteTableId" : {"Ref": "myroutetable"},
+              "SubnetId" : {"Ref":"subnet1"}
+            }
+          },
+          "myassociationforsubnet4":{
+            "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties" : {
+              "RouteTableId" : {"Ref": "myroutetable"},
+              "SubnetId" : {"Ref":"subnet1"}
+            }
+          },
+          
+          
+          "myec2": {
+              "Type": "AWS::EC2::Instance",
+              "Properties": {
+                  "KeyName": { "Ref": "keypair" },
+                  "ImageId": {"Fn::FindInMap": [
+                    "ImageMap",
+                    { "Ref": "AWS::Region" },
+                      "image"
+                  ]}
+                  ,
+                  "InstanceType": "t2.micro",
+                  "SecurityGroupIds" : [{"Ref":"mysecuritygroup"}],
+                  "SubnetId": {"Ref":"subnet1"}
+                  
+                }
+          },
+          "myanotherec2": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+              "KeyName": { "Ref": "keypair" },
+              "ImageId": {"Fn::FindInMap": [
+                "ImageMap",
+                { "Ref": "AWS::Region" },
+                  "image"
+              ]} ,
+                "InstanceType": "t2.micro",
+                "SecurityGroupIds" : [{"Ref":"mysecuritygroup"}],
+                "SubnetId": {"Ref":"subnet2"}
+                
+              }
+        }
+          
+    },
+    "Outputs":{
+        
+        "vpcid" : {
+          "Value" : { "Ref": "myvpc" }
+        },
+        
+        "securitygroupname" : {
+          "Value" :{"Ref":"mysecuritygroup"}
+        },
+
+        
+        "ipaddress" : {
+          "Value" : { "Fn::Join" : [ "", [ "http:", {"Fn::GetAtt":["myec2","PrivateIp"]} ] ] }
+        }
+        
+        
+        
+    }
+}

@@ -1,0 +1,54 @@
+1. Network
+2. create a change set
+3. db 
+
+reusability
+  => images (costly)
+  => some softwares => cloud-init
+  
+can i move vm from one region to region
+
+replication/moves are possible
+
+VM => Hard disks
+      => Storage Account
+				=> Page Blob
+	  => Managed Disks
+	  
+	  
+	  SSD
+	  HDD
+	  Magnetic
+	  
+	  => Speed  => IOPS
+	  
+	  
+	   Kb= 1024 bytes
+	   
+	   4GB => $
+	   
+	   
+	   
+	   
+	   1 Kb = 1000 bytes
+	   
+	   1Ki
+	   
+	   
+	   
+	   b  = 1024
+	   
+	   
+	   4GB  => 4096  => 4000 bytes
+	   
+	   
+	   
+	   256Kib => 1 IOPS
+	   
+	   
+	   IOPS => WRite/Read Speed
+	   
+	   
+	   Storage Account 
+	      => Hard disk  
+	    Managed Disk => Hard disk

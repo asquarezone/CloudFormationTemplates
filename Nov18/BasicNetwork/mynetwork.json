@@ -1,0 +1,23 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Simple Network",
+   
+    "Resources":{
+        "myvpc": {
+          "Type": "AWS::EC2::VPC",
+          "Properties": {
+            "CidrBlock": "10.10.0.0/16"
+          }
+        },
+        
+        "mysubnet": {
+          "Type": "AWS::EC2::Subnet",
+          "Properties": {
+            "AvailabilityZone": "us-west-2a",
+            "VpcId": { "Ref": "myvpc" } ,
+            "CidrBlock": "10.10.0.0/24"
+          }
+        }
+        
+    }
+}

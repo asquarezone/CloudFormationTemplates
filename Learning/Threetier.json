@@ -1,0 +1,114 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Trying to create ec2 & rds",
+    "Parameters":{
+        
+        "subnet1az": {
+            "Description": "Subnet1 AZ",
+            "Type": "AWS::EC2::AvailabilityZone::Name"
+        },
+
+        "subnet2az": {
+            "Description": "Subnet2 AZ",
+            "Type": "AWS::EC2::AvailabilityZone::Name"
+        }
+
+        
+    },
+    "Resources":{
+        
+        "threetiernetwork": {
+          "Type": "AWS::EC2::VPC",
+          "Properties": {
+            "CidrBlock": "10.1.0.0/16"
+          }
+        },
+        "subnet1": {
+          "Type": "AWS::EC2::Subnet",
+          "Properties": {
+            "AvailabilityZone": 
+            { "Ref": "subnet1az" }
+            ,
+            "VpcId": 
+            { "Ref": "threetiernetwork" }
+            ,
+            "CidrBlock": "10.1.0.0/24"
+          }
+        },
+        "subnet2": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+              "AvailabilityZone": 
+              { "Ref": "subnet2az" }
+              ,
+              "VpcId": 
+              { "Ref": "threetiernetwork" }
+              ,
+              "CidrBlock": "10.1.1.0/24"
+            }
+          },
+          
+          "-": {
+              "Type": "AWS::EC2::Instance",
+              "Properties": {
+                  "KeyName": -,
+                  "DisableApiTermination": "-",
+                  "ImageId": { - },
+                  "InstanceType": "-",
+                  "Monitoring": "true|false",
+                  "SecurityGroupIds" : [-]
+                }
+           },
+           
+           "rdsDBInstance": {
+             "Type": "AWS::RDS::DBInstance",
+             "Properties": {
+               "AllocatedStorage": "",
+               "DBInstanceClass": "",
+               "AllowMajorVersionUpgrade": "true | false",
+               "AutoMinorVersionUpgrade": "true | false",
+               "AvailabilityZone": "",
+               "BackupRetentionPeriod": "",
+               "CharacterSetName": "",
+               "DBInstanceIdentifier": "",
+               "DBName": "",
+               "DBParameterGroupName": "",
+               "DBSecurityGroups": [ "" ],
+               "DBSnapshotIdentifier": "",
+               "DBSubnetGroupName": "",
+               "Engine": "",
+               "EngineVersion": "",
+               "Iops": "",
+               "KmsKeyId": "",
+               "LicenseModel": "",
+               "MasterUsername": "",
+               "MasterUserPassword": "",
+               "MultiAZ": "true | false",
+               "OptionGroupName": "",
+               "Port": "",
+               "PreferredBackupWindow": "",
+               "PreferredMaintenanceWindow": "",
+               "PubliclyAccessible": "true | false",
+               "SourceDBInstanceIdentifier": "",
+               "StorageEncrypted": "true | false",
+               "StorageType": "",
+               "Tags": [  ],
+               "VPCSecurityGroups": [ "" ]
+             }
+           }
+           
+
+
+        
+    },
+    "Outputs":{
+        
+        "url" : {
+          "Value" : ""
+        },
+        "jdbcconnectionstring":{
+            "Value": ""
+        }
+        
+    }
+}

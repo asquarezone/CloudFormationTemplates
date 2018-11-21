@@ -1,0 +1,15 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Second Network",
+    "Resources":{
+        
+        "mystack1": {
+         "Type": "AWS::CloudFormation::Stack",
+         "Properties": {
+            "TemplateURL": "https://s3",
+            "TimeoutInMinutes": "15"
+         }
+        }
+        
+    }
+}

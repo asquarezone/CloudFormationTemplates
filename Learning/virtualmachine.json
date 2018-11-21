@@ -1,0 +1,72 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Trying to create ec2",
+    "Parameters":{
+        
+        "mykey": {
+            "Description": "Choose a key value pair",
+            "Type": "AWS::EC2::KeyPair::KeyName"
+        },
+        
+        "myami": {
+            "Description": "choose the image",
+            "Type": "AWS::EC2::Image::Id"
+        },
+        
+        "instancetype": {
+            "Description": "This is instance type",
+            "Type": "String",
+            "Default": "t2.micro",
+            "AllowedValues": ["t2.micro","t2.small","t2.large"]
+        },
+        "subnetid": {
+            "Description": "Select Subnet id",
+            "Type": "AWS::EC2::Subnet::Id"
+        },
+
+        
+        "sgroupId": {
+            "Description": "Security Group",
+            "Type": 
+            "List<AWS::EC2::SecurityGroup::Id>"
+        },
+
+        
+        "s3bucketname": {
+            "Description": " S3 Bucket Name",
+            "Type": "String"
+        }
+        
+    },
+    "Resources": {
+        
+        "betterec2": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "KeyName": { "Ref": "mykey" },
+                "ImageId": { "Ref": "myami" },
+                "InstanceType": {"Ref": "instancetype"},
+                "SubnetId": { "Ref": "subnetid"},
+                "SecurityGroupIds" : 
+                { "Ref": "sgroupId" }
+                
+            }
+        },
+        
+        "myvideos": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "AccessControl": "Private",
+                "BucketName": {"Ref": "s3bucketname"}
+            }
+        }
+        
+    },
+    "Outputs":{
+        
+        "publicip" : {
+          "Value" : { "Fn::GetAtt" : [ "betterec2", "PublicIp" ] }
+        }
+        
+    }
+}

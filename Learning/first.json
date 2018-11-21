@@ -1,0 +1,19 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "This is my first attempt",
+    "Resources":{
+        
+        
+        "myec2": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "KeyName": "CloudFormation",
+                "ImageId":  "ami-51537029" ,
+                "InstanceType": "t2.micro",
+                "SecurityGroupIds" : ["sg-0b7c857a3afd29322"]
+                }
+        }
+        
+    }
+
+}

@@ -1,0 +1,4 @@
+INBOUND
+
+H Allow 22 For all
+L  Deny all
