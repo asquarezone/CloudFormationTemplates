@@ -1,0 +1,15 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "This is my first cloudformation template",
+    "Resources" :{
+        
+        "myVpc": {
+            "Description": "my first network from cf",
+            "Type": "AWS::EC2::VPC",
+            "Properties": {
+                "CidrBlock" : "192.168.10.0/24"
+            }
+        }
+        
+    }
+}
