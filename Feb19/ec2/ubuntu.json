@@ -1,0 +1,38 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Simple Mapping",
+    "Mappings": {
+        
+        "myec2details": {
+                  "us-west-2": {
+                    "imageid": "ami-0bbe6b35405ecebdb",
+                    "sgid": "",
+                    "keyname": "oregeon"
+                  },
+                  "ap-south-1": {
+                    "imageid": "ami-0d773a3b7bb2bb1c1",
+                    "sgid": "",
+                    "keyname": "oregeon"
+                  }
+        }
+        
+    },
+    "Resources":{
+        "myubuntu": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "Key": {"Fn::FindInMap":["myec2details", 
+                { "Ref": "AWS::Region" },"keyname"
+                ]}
+                ,
+                "ImageId": {
+                    "Fn::FindInMap":[
+                        "myec2details",
+                        { "Ref": "AWS::Region" },
+                        "imageid"]
+                },
+                "InstanceType": "t2.micro"
+            }
+        }
+    }
+}

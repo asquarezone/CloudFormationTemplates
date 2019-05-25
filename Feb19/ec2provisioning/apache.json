@@ -1,0 +1,48 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Apache Server demonstrated in Feb1-2019",
+    "Resources":{
+        
+        "myEc2": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "KeyName": -,
+                "DisableApiTermination": "-",
+                "ImageId": { - },
+                "InstanceType": "-",
+                "Monitoring": "true|false",
+                "SecurityGroupIds" : [-],
+                "Tags": [
+                    {
+                        "Key": "-",
+                        "Value": "-"
+                    }
+                ],
+                "UserData": {
+                    "Fn::Base64": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "#!/bin/bash -ex",
+                                "sudo apt-get update",
+                                "sudo apt-get install apache2 -y"
+                            ]
+                        ]
+                    }
+                }
+        }
+                }
+    },
+    "Outputs":{
+        
+        "ipbaseurl" : {
+          "Value" : -
+        },
+        
+        "dnsbasedurl" : {
+          "Value" : -
+        }
+        
+        
+    }
+}

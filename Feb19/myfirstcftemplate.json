@@ -9,7 +9,19 @@
             "Properties": {
                 "CidrBlock" : "192.168.10.0/24"
             }
+        },
+        
+        "mysubnet": {
+          "Type": "AWS::EC2::Subnet",
+          "Properties": {
+            "AvailabilityZone": "us-west-2a",
+            "VpcId": 
+            { "Ref": "myVpc" }
+            ,
+            "CidrBlock": "192.168.10.0/24"
+          }
         }
+        
         
     }
 }
