@@ -156,10 +156,10 @@
         "myigw": {
             "Type": "AWS::EC2::InternetGateway",
             "Properties": {
-                "Tags": {
+                "Tags": [{
                     "Key": "Name",
                     "Value": "myigw"
-                }
+                }]
             }
         },
         "AttachGateway": {
@@ -179,10 +179,10 @@
                 "VpcId": {
                     "Ref": "myvpc"
                 },
-                "Tags": {
+                "Tags": [{
                     "Key": "Name",
                     "Value": "public"
-                }
+                }]
             }
         },
         "takemetointernet": {
