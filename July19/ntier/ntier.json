@@ -1,0 +1,262 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Learing Cloudformation to create ntier architecture",
+    "Parameters": {
+        "vpccidr": {
+            "Description": "CIDR range of VPC",
+            "Type": "String",
+            "Default": "192.168.0.0/16"
+        },
+        "subnet1cidr": {
+            "Description": "CIDR range of subnet 1",
+            "Type": "String",
+            "Default": "192.168.0.0/24"
+        },
+        "subnet2cidr": {
+            "Description": "CIDR range of subnet 2",
+            "Type": "String",
+            "Default": "192.168.1.0/24"
+        },
+        "subnet3cidr": {
+            "Description": "CIDR range of subnet 3",
+            "Type": "String",
+            "Default": "192.168.2.0/24"
+        },
+        "subnet4cidr": {
+            "Description": "CIDR range of subnet 4",
+            "Type": "String",
+            "Default": "192.168.3.0/24"
+        },
+        "subnet2az": {
+            "Description": "subnet 2 az",
+            "Type": "AWS::EC2::AvailabilityZone::Name"
+        },
+        "subnet1az": {
+            "Description": "subnet 1 az",
+            "Type": "AWS::EC2::AvailabilityZone::Name"
+        },
+        "subnet3az": {
+            "Description": "subnet 3 az",
+            "Type": "AWS::EC2::AvailabilityZone::Name"
+        },
+        "subnet4az": {
+            "Description": "subnet 4 az",
+            "Type": "AWS::EC2::AvailabilityZone::Name"
+        },
+        "webkey": {
+            "Description": "Select key for login",
+            "Type": "AWS::EC2::KeyPair::KeyName"
+        },
+        "securitygroup": {
+            "Description": "select your security group",
+            "Type": "AWS::EC2::SecurityGroup::GroupName"
+        }
+    },
+    "Resources": {
+        "myvpc": {
+            "Type": "AWS::EC2::VPC",
+            "Properties": {
+                "CidrBlock": {
+                    "Ref": "vpccidr"
+                },
+                "EnableDnsHostnames": true,
+                "InstanceTenancy": "default",
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "myvpc"
+                    }
+                ]
+            }
+        },
+        "subnet1": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "CidrBlock": {
+                    "Ref": "subnet1cidr"
+                },
+                "MapPublicIpOnLaunch": true,
+                "VpcId": {
+                    "Ref": "myvpc"
+                },
+                "AvailabilityZone": {
+                    "Ref": "subnet1az"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "subnet1"
+                    }
+                ]
+            }
+        },
+        "subnet2": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "CidrBlock": {
+                    "Ref": "subnet2cidr"
+                },
+                "MapPublicIpOnLaunch": true,
+                "VpcId": {
+                    "Ref": "myvpc"
+                },
+                "AvailabilityZone": {
+                    "Ref": "subnet2az"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "subnet2"
+                    }
+                ]
+            }
+        },
+        "subnet3": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "CidrBlock": {
+                    "Ref": "subnet3cidr"
+                },
+                "AvailabilityZone": {
+                    "Ref": "subnet3az"
+                },
+                "MapPublicIpOnLaunch": true,
+                "VpcId": {
+                    "Ref": "myvpc"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "subnet3"
+                    }
+                ]
+            }
+        },
+        "subnet4": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "CidrBlock": {
+                    "Ref": "subnet4cidr"
+                },
+                "AvailabilityZone": {
+                    "Ref": "subnet4az"
+                },
+                "MapPublicIpOnLaunch": true,
+                "VpcId": {
+                    "Ref": "myvpc"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "subnet4"
+                    }
+                ]
+            }
+        },
+        "myigw": {
+            "Type": "AWS::EC2::InternetGateway",
+            "Properties": {
+                "Tags": {
+                    "Key": "Name",
+                    "Value": "myigw"
+                }
+            }
+        },
+        "AttachGateway": {
+            "Type": "AWS::EC2::VPCGatewayAttachment",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "myvpc"
+                },
+                "InternetGatewayId": {
+                    "Ref": "myigw"
+                }
+            }
+        },
+        "publicroutetable": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "myvpc"
+                },
+                "Tags": {
+                    "Key": "Name",
+                    "Value": "public"
+                }
+            }
+        },
+        "takemetointernet": {
+            "Type": "AWS::EC2::Route",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "publicroutetable"
+                },
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "GatewayId": {
+                    "Ref": "myigw"
+                }
+            }
+        },
+        "myec2": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "KeyName": {
+                    "Ref": "webkey"
+                },
+                "ImageId": "ami-082b5a644766e0e6f",
+                "InstanceType": "t2.micro",
+                "Monitoring": "false",
+                "SubnetId": {
+                    "Ref": "subnet1"
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "securitygroup"
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "Web"
+                    }
+                ]
+            }
+        }
+    },
+    "Outputs": {
+        "vpcid": {
+            "Value": {
+                "Ref": "myvpc"
+            }
+        },
+        "cidrblockvpc": {
+            "Value": {
+                "Fn::GetAtt": [
+                    "myvpc",
+                    "CidrBlock"
+                ]
+            }
+        },
+        "subnet1id": {
+            "Value": {
+                "Ref": "subnet1"
+            }
+        },
+        "subnet1az": {
+            "Value": {
+                "Fn::GetAtt": [
+                    "subnet1",
+                    "AvailabilityZone"
+                ]
+            }
+        },
+        "publicip": {
+            "Value": {
+                "Fn::GetAtt": [
+                    "myec2",
+                    "PublicIp"
+                ]
+            }
+        }
+    }
+}
