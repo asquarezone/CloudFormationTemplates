@@ -1,0 +1,39 @@
+{
+    "variables": {
+        "client_id": "",
+        "client_secret": "",
+        "tenant_id": "",
+        "subscription_id": "",
+        "resg": "packerdemo"
+    },
+    "builders": [
+        {
+            "type": "azure-arm",
+            "client_id": "{{ user `client_id`}}",
+            "client_secret": "{{ user `client_secret` }}",
+            "tenant_id": "{{ user `tenant_id`}}",
+            "subscription_id": "{{ user `subscription_id`}}",
+            "managed_image_resource_group_name": "{{ user `resg`}}",
+            "managed_image_name": "my-nginx-{{isotime | clean_resource_name}}",
+            "os_type": "Linux",
+            "image_publisher": "Canonical",
+            "image_offer": "UbuntuServer",
+            "image_sku": "18.04-LTS",
+            "azure_tags": {
+                "dept": "Learning",
+                "task": "Image deployment"
+            },
+            "location": "East US",
+            "vm_size": "Standard_B1s"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": [
+                "sudo apt-get update",
+                "sudo apt install nginx -y"
+            ]
+        }
+    ]
+}
