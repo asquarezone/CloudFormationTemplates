@@ -1,0 +1,53 @@
+{
+    "variables": {
+        "client_id": "",
+        "client_secret": "",
+        "tenant_id": "",
+        "subscription_id": "",
+        "resg": "packerdemo",
+        "aws_access_key": "",
+        "aws_secret_key": "",
+        "aws_region": "us-west-2",
+        "aws_source_ami": "ami-06e54d05255faf8f6"
+    },
+    "builders": [
+        {
+            "type": "amazon-ebs",
+            "ami_name": "gameoflife-{{isotime | clean_resource_name}}",
+            "ami_description": "This is gameoflife created from packer",
+            "ami_regions": ["us-west-2"],
+            "access_key": "{{ user `aws_access_key` }}",
+            "secret_key": "{{ user `aws_secret_key` }}",
+            "instance_type": "t2.micro",
+            "source_ami": "{{ user `aws_source_ami` }}",
+            "ssh_username": "ubuntu"
+
+        },
+        {
+            "type": "azure-arm",
+            "client_id": "{{ user `client_id`}}",
+            "client_secret": "{{ user `client_secret` }}",
+            "tenant_id": "{{ user `tenant_id`}}",
+            "subscription_id": "{{ user `subscription_id`}}",
+            "managed_image_resource_group_name": "{{ user `resg`}}",
+            "managed_image_name": "gol-{{isotime | clean_resource_name}}",
+            "os_type": "Linux",
+            "image_publisher": "Canonical",
+            "image_offer": "UbuntuServer",
+            "image_sku": "18.04-LTS",
+            "azure_tags": {
+                "dept": "Learning",
+                "task": "Image deployment"
+            },
+            "location": "East US",
+            "vm_size": "Standard_B1s"
+        }
+    ],
+    "provisioners":[
+        {
+            "type": "shell",
+            "script": "./gameoflife.sh"
+            
+        }
+    ]
+}
