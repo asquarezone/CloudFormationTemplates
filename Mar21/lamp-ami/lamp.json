@@ -1,0 +1,22 @@
+{
+    "builders": [
+        {
+            "type": "amazon-ebs",
+            "ami_name": "lampfrompacker-{{isotime | clean_resource_name}}",
+            "ami_description": "This is lamp stack",
+            "region": "us-west-2",
+            "instance_type": "t2.micro",
+            "source_ami" : "ami-02701bcdc5509e57b",
+            "ssh_username": "ubuntu",
+            "communicator": "ssh"
+
+        }
+    ],
+    "description": "Create a lamp stack",
+    "provisioners": [
+        {
+            "type": "shell",
+            "script": "lamp.sh"
+        }
+    ]
+}
