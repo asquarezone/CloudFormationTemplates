@@ -1,0 +1,43 @@
+{
+    "variables": {
+        "client_id": "",
+        "client_secret": "",
+        "tenant_id": "",
+        "subscription_id": ""
+
+    },
+    "builders": [
+        {
+            "type": "azure-arm",
+            "client_id": "{{user `client_id`}}",
+            "client_secret": "{{user `client_secret`}}",
+            "tenant_id": "{{user `tenant_id`}}",
+            "subscription_id": "{{user `subscription_id`}}",
+            "managed_image_resource_group_name": "forpacker",
+            "managed_image_name": "lampfrompacker-{{isotime | clean_resource_name}}",
+            "os_type": "Linux",
+            "image_publisher": "Canonical",
+            "image_offer": "UbuntuServer",
+            "image_sku": "18.04-LTS",
+            "location": "eastus",
+            "vm_size": "Standard_B1s"
+        },
+        {
+            "type": "amazon-ebs",
+            "ami_name": "lampfrompacker-{{isotime | clean_resource_name}}",
+            "ami_description": "This is lamp stack",
+            "region": "us-west-2",
+            "instance_type": "t2.micro",
+            "source_ami" : "ami-02701bcdc5509e57b",
+            "ssh_username": "ubuntu",
+            "communicator": "ssh"
+
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "script": "lamp.sh"
+        }
+    ]
+}
