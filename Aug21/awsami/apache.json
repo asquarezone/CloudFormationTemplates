@@ -1,0 +1,24 @@
+{
+    "variables": {
+        "aws_access_key": "",
+        "aws_secret_key": ""
+    },
+    "builders": [
+        {
+            "type": "amazon-ebs",
+            "ami_name": "apachefrompacker",
+            "instance_type": "t2.micro",
+            "source_ami": "ami-04bde106886a53080",
+            "access_key": "{{user `aws_access_key` }}",
+            "secret_key": "{{user `aws_secret_key`}}",
+            "region": "ap-south-1",
+            "ssh_username" : "ubuntu"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": ["sudo apt update", "sudo apt install apache2 -y"]
+        }
+    ]
+}
