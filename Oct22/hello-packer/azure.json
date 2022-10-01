@@ -1,4 +1,7 @@
 {
+    "variables": {
+        "version": "1.0.0"
+    },
     "builders": [{
       "type": "azure-arm",
       "use_azure_cli_auth": true,
@@ -23,7 +26,12 @@
           "type": "shell",
           "inline": [ 
               "sudo apt update", 
-              "sudo apt install tree -y"
+              "sudo apt install apache2 -y",
+              "sudo apt install php libapache2-mod-php php-mysql -y",
+              "echo '<?php phpinfo(); ?>' > info.php",
+              "sudo cp info.php /var/www/html/info.php",
+              "echo {{user `version`}} > version.html",
+              "sudo cp version.html /var/www/html/version.html"
           ]
         }
       ]

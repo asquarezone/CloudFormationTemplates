@@ -1,21 +1,33 @@
 {
+    "variables": {
+        "instance_type": "t2.micro",
+        "username": "ubuntu",
+        "version": "1.0.0"
+
+    },
     "builders": [
       {
         "type": "amazon-ebs",
         "region": "us-west-2",
         "source_ami": "ami-017fecd1353bcc96e",
-        "instance_type": "t2.micro",
-        "ssh_username": "ubuntu",
+        "instance_type": "{{user `instance_type`}}",
+        "ssh_username": "{{user `username`}}",
         "ami_name": "hello-packer-{{timestamp}}"
       }
     ],
+    
   
     "provisioners": [
       {
         "type": "shell",
         "inline": [ 
             "sudo apt update", 
-            "sudo apt install tree -y"
+            "sudo apt install apache2 -y",
+            "sudo apt install php libapache2-mod-php php-mysql -y",
+            "echo '<?php phpinfo(); ?>' > info.php",
+            "sudo cp info.php /var/www/html/info.php",
+            "echo {{user `version`}} > version.html",
+            "sudo cp version.html /var/www/html/version.html"
         ]
       }
     ]
